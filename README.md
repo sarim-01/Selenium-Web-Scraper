@@ -1,46 +1,73 @@
-# Selenium-Web-Scraper
-Overview
+# Supreme Court of Pakistan Web Scraper
 
-This project implements an automated web scraper using Python and Selenium to extract case information and judgments from the Supreme Court of Pakistan.
+## Overview
+This project is a Python-based web scraper built with **Selenium** and **Requests** to extract **case judgments** and **case information** from the official website of the Supreme Court of Pakistan.  
+The scrapers collect structured metadata, download related PDF files, and save the results into JSON format.  
 
-The scraper collects structured metadata, downloads related PDF files, and organizes the outputs into dedicated folders. It is designed to handle multiple years and registries, ensuring comprehensive data coverage.
+Two modules are included:  
+- `SupremeCourt_Judgments.py` – Extracts judgments (1980–2025).  
+- `SupremeCourt_CaseInfo.py` – Extracts case information by Year × Registry combinations.  
 
-Features
+Outputs include:  
+- `SupremeCourt_Judgments.json`  
+- `SupremeCourt_CaseInfo.json`  
+- PDF files saved into `judgementpdfs/` and `memopdfs/`.
 
-Extraction of:
+---
 
-Case Title, Case Number, Case Subject
+## Tools Used
+- **Python 3.x**  
+- **Selenium WebDriver** – browser automation for scraping  
+- **WebDriver Manager** – manages ChromeDriver automatically  
+- **Requests** – file download handling  
+- **JSON** – structured data storage  
+- **OS / Pathlib** – file and directory management  
 
-Author Judge, Status, Institution/Disposal Dates
+---
 
-Citations, SCCitations, and Taglines (if available)
+## Steps Followed
+1. **Judgment Scraper**
+   - Navigated to the [Judgment Search page](https://www.supremecourt.gov.pk/judgement-search/).
+   - Triggered the search to load all judgments.
+   - Iterated through all result pages using the “Next” navigation.
+   - Extracted metadata fields:
+     - Case Subject, Case No, Case Title, Author Judge, Upload Date, Judgment Date, Citations, SCCitations, Tagline (if available).
+   - Downloaded judgment PDFs into `judgementpdfs/` and saved metadata in `SupremeCourt_Judgments.json`.
 
-Hearing history and fixation dates (where applicable)
+2. **Case Information Scraper**
+   - Navigated to the [Case Information page](https://scp.gov.pk/OnlineCaseInformation.aspx).
+   - Selected **Year (1980–2025)** and **Registry** combinations.
+   - Parsed the results table and followed “View Details” links for each case.
+   - Extracted metadata fields:
+     - Case Title, Case No, Status, Institution Date, Disposal Date, Advocates, Judges (from history), Fixation Dates, List Type, Location.
+   - Downloaded petition/appeal memos into `memopdfs/` and any linked judgments into `judgementpdfs/`.
+   - Saved metadata in `SupremeCourt_CaseInfo.json`.
 
-Automated download of:
+---
 
-Petition/Appeal Memos → memopdfs/
+## Issues Faced
+- **StaleElementReferenceException**  
+  Occurred when navigating pages; resolved by re-fetching elements after each page load.  
 
-Judgments/Orders → judgementpdfs/
+- **404 Errors on PDFs**  
+  Some links returned missing files; handled gracefully by skipping and logging the error.  
 
-Files renamed into structured formats:
+- **Large Dataset (~3326+ cases)**  
+  Required handling of pagination and longer execution times; mitigated with waits and structured loops.  
 
-memo_<CaseNo>.pdf
+- **Optional Fields Missing**  
+  Some records lacked taglines or advocates; defaulted to `"N/A"` for consistency.  
 
-judgment_<CaseNo>.pdf
+---
 
-Preservation of file sizes for reference.
+## Outputs
+- `SupremeCourt_Judgments.json` – approximately 3,300 judgment records with PDFs.  
+- `SupremeCourt_CaseInfo.json` – complete Year × Registry dataset with case metadata and documents.  
+- Folders:
+  - `judgementpdfs/` – judgment files  
+  - `memopdfs/` – memo files  
 
-JSON outputs:
+---
 
-SupremeCourt_Judgments.json
-
-SupremeCourt_CaseInfo.json
-
-Modular code: separate scripts for Judgments and Case Information scraping.
-
-Folder Structure
-
-Designed for reproducibility and easy extension.
-
-Folder Structure
+## License
+This project is licensed under the **MIT License**.  
