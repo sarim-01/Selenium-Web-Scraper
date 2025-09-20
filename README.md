@@ -1,4 +1,4 @@
-# Supreme Court of Pakistan Web Scraper
+Web Scraper Using Natural Language Processing
 
 ## Overview
 This project is a Python-based web scraper built with **Selenium** and **Requests** to extract **case judgments** and **case information** from the official website of the Supreme Court of Pakistan.  
